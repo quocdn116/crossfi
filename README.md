@@ -93,7 +93,7 @@ cat $HOME/.crossfid/config/priv_validator_key.json
 8. Remove Node
    
 ```python 
-sudo systemctl stop crossfid && sudo systemctl disable crossfid && sudo rm /etc/systemd/system/crossfid.service && sudo systemctl daemon-reload && rm -rf $HOME/.crossfid && sudo rm -rf $(which crossfid) ```
+sudo systemctl stop crossfid && sudo systemctl disable crossfid && sudo rm /etc/systemd/system/crossfid.service && sudo systemctl daemon-reload && rm -rf $HOME/.crossfid && sudo rm -rf $(which crossfid) 
 
 ```
 

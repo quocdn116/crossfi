@@ -68,6 +68,5 @@ sudo journalctl -u crossfid -f --no-hostname -o cat
 cat $HOME/.crossfid/config/priv_validator_key.json
 
 7. Remove Node
-
 sudo systemctl stop crossfid && sudo systemctl disable crossfid && sudo rm /etc/systemd/system/crossfid.service && sudo systemctl daemon-reload && rm -rf $HOME/.crossfid && sudo rm -rf $(which crossfid) 
 

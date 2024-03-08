@@ -1,5 +1,9 @@
 # install crossfi node
 
+Refer to docs from here for more information
+
+https://docs.crossfi.org/crossfi-chain/technical-information/validators 
+
 
 1. Auto Install
 ```python 

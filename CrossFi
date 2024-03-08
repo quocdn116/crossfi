@@ -1,0 +1,74 @@
+#!/bin/bash
+clear
+
+if [[ ! -f "$HOME/.bash_profile" ]]; then
+    touch "$HOME/.bash_profile"
+fi
+
+if [ -f "$HOME/.bash_profile" ]; then
+    source $HOME/.bash_profile
+fi
+
+logo_nodesync(){
+
+clear
+
+ cat << "EOF"
+=========================================================================
+=========================================================================
+EOF
+
+}
+
+logo_nodesync;
+
+
+
+echo "===========CrossFi Install Easy======= " && sleep 1
+
+read -p "Do you want run node CrossFi ? (y/n): " choice
+
+if [ "$choice" == "y" ]; then
+
+
+sudo apt update && sudo apt upgrade -y
+sudo apt install curl git wget htop tmux build-essential jq make lz4 gcc unzip -y
+wget https://github.com/crossfichain/crossfi-node/releases/download/v0.3.0-prebuild3/crossfi-node_0.3.0-prebuild3_linux_amd64.tar.gz && tar -xf crossfi-node_0.3.0-prebuild3_linux_amd64.tar.gz
+cd $HOME
+sudo chmod +x ./bin/crossfid
+sudo mv ./bin/crossfid /usr/local/bin
+crossfid version
+cd $HOME
+git clone https://github.com/crossfichain/testnet.git
+sudo mv testnet .crossfid
+cd $HOME
+changeport=15
+echo "export $changeport" >> $HOME/.bash_profile
+crossfid config chain-id crossfi-evm-testnet-1
+crossfid config node tcp://localhost:${changeport}657
+sed -i.bak -e "s%:1317%:${changeport}317%g; s%:8080%:${changeport}080%g; s%:9090%:${changeport}090%g; s%:9091%:${changeport}091%g; s%:8545%:${changeport}545%g; s%:8546%:${changeport}546%g; s%:6065%:${changeport}065%g" $HOME/.crossfid/config/app.toml
+sed -i.bak -e "s%:6060%:${changeport}060%g; s%:26660%:${changeport}660%g" $HOME/.crossfid/config/config.toml
+sed -i "s/0.0.0.0:26657/0.0.0.0:${changeport}657/g" $HOME/.crossfid/config/config.toml 
+sed -i "s/0.0.0.0:26656/0.0.0.0:${changeport}656/g" $HOME/.crossfid/config/config.toml 
+sed -i "s/127.0.0.1:26658/127.0.0.1:${changeport}658/g" $HOME/.crossfid/config/config.toml 
+# Set Service file
+sudo tee /etc/systemd/system/crossfid.service > /dev/null <<EOF
+[Unit]
+Description=crossfid
+After=network-online.target
+[Service]
+User=$USER
+ExecStart=$(which crossfid) start --home $HOME/.crossfid
+Restart=always
+RestartSec=3
+LimitNOFILE=65535
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable crossfid
+sudo systemctl restart crossfid
+sudo journalctl -fu crossfid -o cat
+
+fi

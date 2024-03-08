@@ -37,6 +37,12 @@ crossfid tx staking create-validator \
   --gas-adjustment=1.5 \
   --from=wallet
 ```
+
+Check Sync before create validator
+```python
+crossfid status 2>&1 | jq .SyncInfo.catching_up
+```
+
 4. Delegate Token to your own validator
 ```python 
 crossfid tx staking delegate $(crossfid keys show wallet --bech val -a) 1000000000000000000000mpx --from wallet --chain-id crossfi-evm-testnet-1 --gas-prices 10000000000000mpx --gas-adjustment 1.5 --gas auto -y
